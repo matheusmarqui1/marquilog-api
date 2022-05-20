@@ -6,6 +6,7 @@ import lombok.*;
 import org.springframework.lang.Nullable;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Getter
@@ -15,7 +16,7 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Problema {
     private final Integer status;
-    private final LocalDateTime dataHora;
+    private final OffsetDateTime dataHora;
     private final String erro;
     @Nullable
     private List<Campo> campos;

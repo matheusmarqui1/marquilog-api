@@ -1,11 +1,14 @@
 package marqui.matheus.marquilog.domain.model;
 
 import lombok.*;
+import marqui.matheus.marquilog.domain.ValidationGroups;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.validation.groups.Default;
 
 @Getter
 @Setter
@@ -15,7 +18,7 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @Entity
 public class Cliente {
-
+	@NotNull(groups = ValidationGroups.ClienteId.class)
 	@EqualsAndHashCode.Include
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -12,6 +12,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,7 +31,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(
                 ex, Problema.builder()
                         .status(status.value())
-                        .dataHora(LocalDateTime.now())
+                        .dataHora(OffsetDateTime.now())
                         .erro("Um ou mais campos apresentam erros de validação. Cheque-os e tente novamente...")
                         .campos(campos)
                         .build(),
@@ -42,7 +43,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         HttpStatus status = HttpStatus.BAD_REQUEST;
         return handleExceptionInternal(
                 ex,
-                Problema.builder().status(status.value()).dataHora(LocalDateTime.now()).erro(ex.getMessage()).build(),
+                Problema.builder().status(status.value()).dataHora(OffsetDateTime.now()).erro(ex.getMessage()).build(),
                 new HttpHeaders(),
                 status,
                 request
