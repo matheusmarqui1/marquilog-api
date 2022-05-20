@@ -21,19 +21,19 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
                                                                   HttpHeaders headers, HttpStatus status, WebRequest request) {
 
-        List<Problema.Campo> erros = ex.getBindingResult()
+        List<Problema.Campo> campos = ex.getBindingResult()
                 .getAllErrors()
                 .stream()
                 .map(objectError -> new Problema.Campo(((FieldError) objectError).getField(), objectError.getDefaultMessage()))
                 .collect(Collectors.toList());
 
         return handleExceptionInternal(
-                ex, new Problema(
-                        status.value(),
-                        LocalDateTime.now(),
-                        "Um ou mais campos estão inválidos. Faça o preenchimento correto e tente novamente.",
-                        erros
-                ),
+                ex, Problema.builder()
+                        .status(status.value())
+                        .dataHora(LocalDateTime.now())
+                        .erro("Um ou mais campos apresentam erros de validação. Cheque-os e tente novamente...")
+                        .campos(campos)
+                        .build(),
                 headers, status, request);
     }
 
