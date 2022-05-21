@@ -6,6 +6,7 @@ import marqui.matheus.marquilog.api.model.EntregaResponse;
 import marqui.matheus.marquilog.api.model.request.EntregaRequest;
 import marqui.matheus.marquilog.domain.model.Entrega;
 import marqui.matheus.marquilog.domain.repository.EntregaRepository;
+import marqui.matheus.marquilog.domain.service.FinalizacaoEntregaService;
 import marqui.matheus.marquilog.domain.service.SolicitacaoEntregaService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 public class EntregaController {
     private final SolicitacaoEntregaService solicitacaoEntregaService;
+    private final FinalizacaoEntregaService finalizacaoEntregaService;
     private final EntregaRepository entregaRepository;
     private final Assembler<EntregaResponse> assembler;
 
@@ -40,5 +42,11 @@ public class EntregaController {
         return entregaRepository.findById(entregaId)
                 .map( entrega -> ResponseEntity.ok(assembler.convert(entrega, EntregaResponse.class)) )
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/{entregaId}/finalizacao")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void finalizar(@PathVariable Long entregaId) {
+        finalizacaoEntregaService.finalizar(entregaId);
     }
 }

@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import marqui.matheus.marquilog.domain.ValidationGroups;
+import marqui.matheus.marquilog.domain.exception.RegraNegocioException;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -64,5 +65,21 @@ public class Entrega {
         this.getOcorrencias().add(ocorrencia);
 
         return ocorrencia;
+    }
+
+    public boolean podeSerFinalizada() {
+        return StatusEntrega.PENDENTE.equals(this.getStatus());
+    }
+
+    public boolean naoPodeSerFinalizada() {
+        return !this.podeSerFinalizada();
+    }
+
+    public void finalizar() {
+        if(this.naoPodeSerFinalizada())
+            throw new RegraNegocioException("Não é possível finalizar a entrega.");
+
+        this.setStatus(StatusEntrega.FINALIZADA);
+        this.setDataFinalizacao(OffsetDateTime.now());
     }
 }
