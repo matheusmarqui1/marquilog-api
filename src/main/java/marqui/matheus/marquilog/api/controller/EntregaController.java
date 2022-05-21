@@ -2,12 +2,11 @@ package marqui.matheus.marquilog.api.controller;
 
 import lombok.AllArgsConstructor;
 import marqui.matheus.marquilog.api.assembler.Assembler;
-import marqui.matheus.marquilog.api.model.DestinatarioModel;
 import marqui.matheus.marquilog.api.model.EntregaResponse;
+import marqui.matheus.marquilog.api.model.request.EntregaRequest;
 import marqui.matheus.marquilog.domain.model.Entrega;
 import marqui.matheus.marquilog.domain.repository.EntregaRepository;
 import marqui.matheus.marquilog.domain.service.SolicitacaoEntregaService;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,8 +24,10 @@ public class EntregaController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public EntregaResponse solicitar(@RequestBody @Valid Entrega entrega) {
-        return assembler.toModel(solicitacaoEntregaService.solicitar(entrega), EntregaResponse.class);
+    public EntregaResponse solicitar(@RequestBody @Valid EntregaRequest entregaRequest) {
+        return assembler.convert(solicitacaoEntregaService.solicitar(
+                assembler.convert(entregaRequest, Entrega.class)
+        ), EntregaResponse.class);
     }
 
     @GetMapping
@@ -37,7 +38,7 @@ public class EntregaController {
     @GetMapping("{entregaId}")
     public ResponseEntity<EntregaResponse> buscarPorId(@PathVariable Long entregaId) {
         return entregaRepository.findById(entregaId)
-                .map( entrega -> ResponseEntity.ok(assembler.toModel(entrega, EntregaResponse.class)) )
+                .map( entrega -> ResponseEntity.ok(assembler.convert(entrega, EntregaResponse.class)) )
                 .orElse(ResponseEntity.notFound().build());
     }
 }

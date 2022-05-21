@@ -12,14 +12,16 @@ import java.util.stream.Collectors;
 public class Assembler<Tipo> {
     private final ModelMapper modelMapper;
 
-    public <Tipo> Tipo toModel(Object origem, Class<Tipo> destino) {
+    public <Tipo> Tipo convert(Object origem, Class<Tipo> destino) {
         return modelMapper.map(origem, destino);
     }
 
     public List<Tipo> toCollectionModel(List<? extends Object> listaOrigem,
                                         Class<Tipo> destino) {
         return listaOrigem.stream()
-                .map(o -> toModel(o, destino))
+                .map(o -> convert(o, destino))
                 .collect(Collectors.toList());
     }
+
+
 }
