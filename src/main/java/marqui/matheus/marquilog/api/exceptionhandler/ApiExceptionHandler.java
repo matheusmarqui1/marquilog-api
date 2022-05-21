@@ -1,5 +1,6 @@
 package marqui.matheus.marquilog.api.exceptionhandler;
 
+import marqui.matheus.marquilog.domain.exception.EntidadeNaoEncontradaException;
 import marqui.matheus.marquilog.domain.exception.RegraNegocioException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -41,6 +42,18 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler({RegraNegocioException.class})
     public ResponseEntity<Object> handleRegraNegocio(RegraNegocioException ex, WebRequest request) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
+        return handleExceptionInternal(
+                ex,
+                Problema.builder().status(status.value()).dataHora(OffsetDateTime.now()).erro(ex.getMessage()).build(),
+                new HttpHeaders(),
+                status,
+                request
+        );
+    }
+
+    @ExceptionHandler({EntidadeNaoEncontradaException.class})
+    public ResponseEntity<Object> handleRegraNegocio(EntidadeNaoEncontradaException ex, WebRequest request) {
+        HttpStatus status = HttpStatus.NOT_FOUND;
         return handleExceptionInternal(
                 ex,
                 Problema.builder().status(status.value()).dataHora(OffsetDateTime.now()).erro(ex.getMessage()).build(),
